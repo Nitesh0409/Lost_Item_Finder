@@ -1,0 +1,41 @@
+/* src/pages/ItemDetail.css */
+.detail-container {
+    max-width: 800px;
+    margin: 50px auto;
+    display: flex;
+    gap: 30px;
+    border: 1px solid #ccc;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+.detail-container img {
+    width: 300px;
+    border-radius: 8px;
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-content h2 {
+    margin-bottom: 10px;
+}
+
+.detail-content p {
+    margin: 10px 0;
+}
+
+.detail-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.detail-content button:hover {
+    background-color: #218838;
+}

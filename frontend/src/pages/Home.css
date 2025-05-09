@@ -1,0 +1,23 @@
+/* src/pages/Home.css */
+.home {
+    text-align: center;
+    margin-top: 80px;
+}
+
+.home-buttons {
+    margin-top: 30px;
+}
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    margin: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
