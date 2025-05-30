@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 
 require("dotenv").config();
 
@@ -8,7 +7,8 @@ require("dotenv").config();
 const app = express()
 const port = process.env.PORT || 5000;
 
-const ItemRoutes = require("./routes/itemRoutes");
+const lostItemRoutes = require("./routes/lostItemRoutes");
+const foundItemRoutes = require("./routes/foundItemRoutes");
 const homeRoutes = require("./routes/home");
 const dbConnect = require("./config/db");
 
@@ -27,7 +27,8 @@ app.use((req, res, next) => {
 dbConnect();
 
 // app.use("/api/auth",ItemRoutes.);
-app.use("/api/items", ItemRoutes);
+app.use("/api/items/lost", lostItemRoutes);
+app.use("/api/items/found", foundItemRoutes);
 
 app.use("/", homeRoutes);
 

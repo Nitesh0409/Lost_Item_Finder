@@ -19,11 +19,11 @@ const foundItemSchema = new mongoose.Schema({
     type: {
       type: String,
       enum: ["Point"],
-      required: true,
+      required: false,
     },
     coordinates: {
       type: [Number],
-      required: true,
+      required: false,
     },
   },
   tags: [String], // e.g., ['purse', 'black']
@@ -35,6 +35,28 @@ const foundItemSchema = new mongoose.Schema({
     type: String,
     enum: ["open", "claimed", "closed"],
     default: "open",
+  },
+  claimed: {
+    isClaimed: {
+      type: Boolean,
+      default: false,
+    },
+    claimedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+  },
+  delivered: {
+    isDelivered: {
+      type: Boolean,
+      default: false,
+    },
+    deliveredTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
   },
   createdAt: {
     type: Date,

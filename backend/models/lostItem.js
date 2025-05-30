@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const lostItemSchema = new mongoose.Schema({
   userId: {
@@ -18,21 +18,34 @@ const lostItemSchema = new mongoose.Schema({
   location: {
     type: {
       type: String,
-      enum: ["Point"], required: false
+      enum: ["Point"],
+      required: false,
     },
     coordinates: {
       type: [Number],
-      required: false
+      required: false,
     },
   },
   tags: [String],
-  dateReported: { type: Date, default: Date.now },
+  dateReported: {
+    type: Date,
+    default: Date.now,
+  },
   status: {
     type: String,
     enum: ["open", "claimed", "closed"],
     default: "open",
   },
-  createdAt: { type: Date, default: Date.now },
+  matchedFoundItems: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "FoundItem",
+    }
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 lostItemSchema.index({ location: "2dsphere" });

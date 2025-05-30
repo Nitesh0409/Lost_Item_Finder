@@ -1,29 +1,38 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/SignUp";
-import ReportLost from "./pages/ReportLost";
-import ReportFound from "./pages/ReportFound";
-import ItemList from "./pages/ItemList";
-import ItemDetail from "./pages/ItemDetail";
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import RootLayout from "./Layout";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import HomePage from "./pages/homePage/Home";
+import LostItemsPage from "./pages/lostItems/Page";
+import FoundItemsPage from "./pages/foundItems/Page";
+import ReportLostPage from "./pages/report/lost/Page";
+import ReportFoundPage from "./pages/report/found/Page";
+import ProfilePage from "./pages/profile/Page";
+import ClaimCenterPage from "./pages/claim_centre/Page";
 
-function App() {
+// If you want to use a theme provider or toaster, import and use them here.
+
+export default function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/report-lost" element={<ReportLost />} />
-        <Route path="/report-found" element={<ReportFound />} />
-        <Route path="/items" element={<ItemList />} />
-        <Route path="/items/:id" element={<ItemDetail />} />
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col font-inter">
+        <Navbar />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/lost-items" element={<LostItemsPage />} />
+            <Route path="/found-items" element={<FoundItemsPage />} />
+            <Route path="/report-lost" element={<ReportLostPage />} />
+            <Route path="/report-found" element={<ReportFoundPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/claim-center" element={<ClaimCenterPage />} />
+            {/* Add more routes as needed */}
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
-
-export default App;
