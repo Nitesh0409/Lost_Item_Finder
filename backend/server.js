@@ -9,26 +9,34 @@ const port = process.env.PORT || 5000;
 
 const lostItemRoutes = require("./routes/lostItemRoutes");
 const foundItemRoutes = require("./routes/foundItemRoutes");
+const authRoutes = require("./routes/authRoutes");
 const homeRoutes = require("./routes/home");
 const dbConnect = require("./config/db");
 
 app.use(bodyParser.json());
 
-const User = require("./models/user");
-
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); // ✅ specific origin
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true"); // ✅ needed for auth
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // ✅ Handle preflight
+  }
 
   next();
 });
+
 
 dbConnect();
 
 // app.use("/api/auth",ItemRoutes.);
 app.use("/api/items/lost", lostItemRoutes);
 app.use("/api/items/found", foundItemRoutes);
+
+// user routes
+app.use("/api/user",authRoutes);
 
 app.use("/", homeRoutes);
 

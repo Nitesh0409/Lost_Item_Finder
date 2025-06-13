@@ -20,11 +20,34 @@ const categories = [
 ];
 
 export default function LostItemsPage() {
-  const [items] = useState(mockLostItems);
+  const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState(mockLostItems);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
+
+  useEffect(() => {
+    const fetchLostItems = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:8080/api/items/lost/lostItems", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+        );
+        const data = await response.json();
+        setItems(data.items);
+      } catch (error) {
+        console.error("Error fetching lost items:", error);
+      }
+    };
+
+    fetchLostItems();
+  }, []);
 
   useEffect(() => {
     let filtered = items;
@@ -64,6 +87,9 @@ export default function LostItemsPage() {
 
     setFilteredItems(filtered);
   }, [items, searchTerm, selectedCategory, sortBy]);
+
+  // console.log(filteredItems.map((item) => item._id));
+
 
   return (
     <div className="lost-bg">
@@ -136,7 +162,7 @@ export default function LostItemsPage() {
           <div className="items-grid">
             {filteredItems.map((item, index) => (
               <motion.div
-                key={item.id}
+                key={item._id || index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}

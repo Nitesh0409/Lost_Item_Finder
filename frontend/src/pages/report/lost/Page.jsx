@@ -25,13 +25,13 @@ export default function ReportLostPage() {
     description: "",
     category: "",
     location: "",
+    tags: "",
     dateLost: "",
     contactInfo: "",
     reward: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Dummy toast (replace with your own toast library or alert)
   const toast = ({ title, description }) => {
     alert(`${title}\n${description}`);
   };
@@ -40,19 +40,67 @@ export default function ReportLostPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const tagsArray = formData.tags
+    ? formData.tags.split(",").map((tag) => tag.trim()).filter(tag => tag.length > 0)
+    : [];
 
-    toast({
-      title: "Lost item reported successfully!",
-      description: "We'll notify you if someone finds a matching item.",
-    });
+    //api call 
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:8080/api/items/lost/addLostItem",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            description: formData.description,
+            category: formData.category,
+            location: formData.location,
+            tags: tagsArray,
+            image:
+              "https://cdn.britannica.com/79/20279-050-ECDF21A7/mountain-gorilla-Virunga-National-Park-Democratic-Republic.jpg",
+            dateLost: formData.dateLost,
+            contactInfo: formData.contactInfo,
+            reward: formData.reward,
+          }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Submission failed");
+
+      const data = await response.json();
+      toast({
+        title: data.message || "Lost item reported successfully!",
+        description: "We'll notify you if someone finds a matching item.",
+      });
+
+      // Reset form after successful submission
+      setFormData({
+        title: "",
+        description: "",
+        category: "",
+        location: "",
+        tags:"",
+        image:"",
+        dateLost: "",
+        contactInfo: "",
+        reward: "",
+      });
+    } catch (err) {
+      toast({ title: "Error", description: err.message });
+    }
+    
 
     setIsSubmitting(false);
     setFormData({
       title: "",
       description: "",
       category: "",
+      tags:"",
       location: "",
       dateLost: "",
       contactInfo: "",
@@ -175,6 +223,19 @@ export default function ReportLostPage() {
                       />
                     </div>
                   </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="tags">Tags (Optional)</label>
+                  <small className="text-muted">
+                    Use commas to separate multiple tags
+                  </small>
+                  <input
+                    id="tags"
+                    placeholder="e.g., black, wallet, leather, brand name"
+                    value={formData.tags}
+                    onChange={(e) => handleInputChange("tags", e.target.value)}
+                    className="input"
+                  />
                 </div>
 
                 <div className="form-row">

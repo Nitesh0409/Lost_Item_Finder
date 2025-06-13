@@ -1,10 +1,27 @@
 import React from "react";
 import { MapPin, Calendar, DollarSign, User } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
+
 import "./ItemCard.css";
 
 export default function ItemCard({ item, type }) {
+  const navigate = useNavigate();
+
   const date = type === "lost" ? item.dateLost : item.dateFound;
   const dateLabel = type === "lost" ? "Lost on" : "Found on";
+
+  const token = localStorage.getItem("token");
+  let currUser = null;
+  // console.log(token);
+  if (token) {
+    const decode = jwtDecode(token);
+    currUser = decode.userId;
+    // console.log(currUser);
+  }
+
+  const isOwner = item.userId === currUser;
+
 
   return (
     <div className="card">
@@ -51,16 +68,23 @@ export default function ItemCard({ item, type }) {
 
         <div className="card-actions">
           <button
-            className={`btn-primary ${
-              type === "lost" ? "btn-lost" : "btn-found"
-            }`}
+            className="detailsBtn"
+            onClick={() => navigate(`/details/${item._id}?type=${type}`)}
           >
-            {type === "lost" ? "I Found This" : "Claim Item"}
+            {" "}
+            Details
           </button>
 
-          <button className="btn-icon" aria-label="User">
+          {!isOwner && (<button
+            className={`btn-primary ${type === "lost" ? "btn-lost" : "btn-found"
+              }`}
+          >
+            {type === "lost" ? "Claim finding" : "Claim Item"}
+          </button>)}
+
+          {!isOwner && (<button className="btn-icon" aria-label="User">
             <User size={16} />
-          </button>
+          </button>)}
         </div>
       </div>
     </div>

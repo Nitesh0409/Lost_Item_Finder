@@ -1,4 +1,6 @@
 const LostItem = require("../../models/lostItem");
+const User = require("../../models/user");
+
 const { validationResult } = require("express-validator");
 
 //will add later if item is found match and claimed then remove..
@@ -12,20 +14,36 @@ exports.addLostItem = async (req, res,next) => {
     return next(error);
   }
 
-  const { itemName, description, images, tags, location } = req.body;
-  const userId = req.userId || '6650e82a6f9f1937b2f6764f';
+  const { title,
+    description,
+    category,
+    location,
+    image,
+    dateLost,
+    contactInfo,
+    reward } = req.body;
+  
+  const userId = req.user.userId;
 
   const lostItem = new LostItem({
     userId,
-    title : itemName,
+    title,
     description,
-    images,
-    tags,
-    location
+    category,
+    location,
+    image,
+    dateLost,
+    contactInfo,
+    reward
   });
 
   try {
     const savedItem = await lostItem.save();
+
+    await User.findByIdAndUpdate(userId, {
+      $push: { itemsReportedLost: savedItem._id }
+    });
+
     console.log("item saved in db");
     res.status(201).json({
       message: 'Lost item reported successfully!',
@@ -39,6 +57,7 @@ exports.addLostItem = async (req, res,next) => {
 };
 
 exports.getAllLostItems = async (req, res, next) => {
+  const userId = req.user.userId;
   try {
     const lostItems = await LostItem
       .find()
@@ -56,6 +75,8 @@ exports.getAllLostItems = async (req, res, next) => {
 
 exports.getLostItem = async (req, res, next) => {
   const itemId = req.params.id;
+
+  const userId = req.user.userId;
 
   try {
     const item = await LostItem.findById(itemId);
@@ -78,6 +99,8 @@ exports.getLostItem = async (req, res, next) => {
 exports.deleteLostItem = async (req, res, next) => {
   const itemId = req.params.id;
 
+  const userId = req.user.userId;
+
   try {
     const item = await LostItem.findById(itemId);
     if (!item) {
@@ -86,16 +109,18 @@ exports.deleteLostItem = async (req, res, next) => {
       throw error;
     }
 
-    /*
-    will add later
-    */
-    // if (item.userId.toString() !== req.userId) {
-    //   const error = new Error('Not authorized to delete this item.');
-    //   error.statusCode = 403;
-    //   throw error;
-    // }
+    if (item.userId.toString() !== userId) {
+      const error = new Error('Not authorized to delete this item.');
+      error.statusCode = 403;
+      throw error;
+    }
 
     await LostItem.findByIdAndDelete(itemId);
+
+    await User.findByIdAndUpdate(userId, {
+      $pull: { itemsReportedLost: itemId }
+    });
+
     res.status(200).json({ message: 'Item deleted successfully!' });
   } catch (err) {
     if (!err.statusCode) err.statusCode = 500;
@@ -106,6 +131,8 @@ exports.deleteLostItem = async (req, res, next) => {
 
 exports.updateLostItem = async (req, res, next) => {
   const itemId = req.params.id;
+  const userId = req.user.userId;
+
   const { itemName, description, tags, images, location } = req.body;
 
   try {
@@ -116,7 +143,7 @@ exports.updateLostItem = async (req, res, next) => {
       throw error;
     }
 
-    if (item.userId.toString() !== req.userId) {
+    if (item.userId.toString() !== userId) {
       const error = new Error('Not authorized to update this item.');
       error.statusCode = 403;
       throw error;

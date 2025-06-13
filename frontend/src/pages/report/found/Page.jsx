@@ -24,6 +24,7 @@ export default function ReportFoundPage() {
     description: "",
     category: "",
     location: "",
+    tags:"",
     dateFound: "",
     contactInfo: "",
     safeLocation: "",
@@ -39,13 +40,61 @@ export default function ReportFoundPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const tagsArray = formData.tags
+      ? formData.tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0)
+      : [];
+    // API call
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:8080/api/items/found/addFoundItem",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            description: formData.description,
+            category: formData.category,
+            location: formData.location,
+            tags: tagsArray,
+            image:
+              "https://as1.ftcdn.net/jpg/03/13/09/10/1000_F_313091018_iMzn3eoJzYUFOSHMVMau41AuNiWfswAQ.jpg",
+            dateFound: formData.dateFound,
+            contactInfo: formData.contactInfo,
+            safeLocation: formData.safeLocation,
+          }),
+        }
+      );
 
-    toast({
-      title: "Found item reported successfully!",
-      description: "We'll help connect you with the owner.",
-    });
+      if (!response.ok) throw new Error("Submission failed");
+
+      const data = await response.json();
+      toast({
+        title: data.message || "Lost item reported successfully!",
+        description: "We'll notify you if someone finds a matching item.",
+      });
+
+      // Reset form after successful submission
+      setFormData({
+        title: "",
+        description: "",
+        category: "",
+        location: "",
+        tags: "",
+        image: "",
+        dateLost: "",
+        contactInfo: "",
+        safeLocation: "",
+      });
+    } catch (err) {
+      toast({ title: "Error", description: err.message });
+    }
 
     setIsSubmitting(false);
     setFormData({
@@ -53,6 +102,7 @@ export default function ReportFoundPage() {
       description: "",
       category: "",
       location: "",
+      tags: "",
       dateFound: "",
       contactInfo: "",
       safeLocation: "",
@@ -175,7 +225,19 @@ export default function ReportFoundPage() {
                     </div>
                   </div>
                 </div>
-
+                <div className="form-group">
+                  <label htmlFor="tags">Tags (Optional)</label>
+                  <small className="text-muted">
+                    Use commas to separate multiple tags
+                  </small>
+                  <input
+                    id="tags"
+                    placeholder="e.g., black, wallet, leather, brand name"
+                    value={formData.tags}
+                    onChange={(e) => handleInputChange("tags", e.target.value)}
+                    className="input"
+                  />
+                </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="contactInfo">Contact Information *</label>

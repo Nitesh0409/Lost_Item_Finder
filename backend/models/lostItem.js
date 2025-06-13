@@ -10,23 +10,34 @@ const lostItemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  images: {
+  image: {
     type: String,
     required: false,
   },
   description: String,
   location: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      required: false,
-    },
-    coordinates: {
-      type: [Number],
-      required: false,
-    },
+    type: String,
+    required: false,
   },
-  tags: [String],
+  dateLost: {
+    type: Date,
+    required: false,
+  },
+
+  tags: {
+    type: [String],
+    default: [],
+  },
+
+  contactInfo: {
+    type: String, // or break it into email/phone if needed
+    required: false,
+  },
+
+  reward: {
+    type: Number, // or Number if you're expecting monetary values
+    required: false,
+  },
   dateReported: {
     type: Date,
     default: Date.now,
@@ -48,8 +59,8 @@ const lostItemSchema = new mongoose.Schema({
   },
 });
 
-lostItemSchema.index({ location: "2dsphere" });
-lostItemSchema.index({ tags: 1 });
+// lostItemSchema.index({ location: "2dsphere" });
+// lostItemSchema.index({ tags: 1 });
 lostItemSchema.index({ title: "text", description: "text" });
 
 const LostItem = mongoose.model("LostItem", lostItemSchema);

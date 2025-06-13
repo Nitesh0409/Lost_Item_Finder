@@ -374,6 +374,25 @@ body {
     box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
 }
 
+.detailsBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 0.875rem;
+    flex: 1;
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
 .btn-icon {
     display: inline-flex;
     align-items: center;

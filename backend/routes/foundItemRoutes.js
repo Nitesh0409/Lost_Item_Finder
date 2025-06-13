@@ -1,11 +1,15 @@
 const express = require('express');
-const foundItemValidators = require("../validators/foundItemsValidators");
+const {validateFoundItem} = require("../validators/foundItemsValidators");
 const foundItemControllers = require("../controllers/itemControllers/foundItems");
+
+const authenticateUser = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
+router.use(authenticateUser);
+
 // Add a new found item
-router.post("/addFoundItem", foundItemValidators, foundItemControllers.addFoundItem);
+router.post("/addFoundItem", validateFoundItem, foundItemControllers.addFoundItem);
 
 // Get a specific found item by ID
 router.get("/foundItem/:id", foundItemControllers.getFoundItem);
@@ -17,6 +21,6 @@ router.get("/foundItems", foundItemControllers.getAllFoundItems);
 router.delete("/foundItem/:id", foundItemControllers.deleteFoundItem);
 
 // Update a found item by ID
-router.put("/foundItem/:id", foundItemValidators, foundItemControllers.updateFoundItem);
+router.put("/foundItem/:id", validateFoundItem, foundItemControllers.updateFoundItem);
 
 module.exports = router;

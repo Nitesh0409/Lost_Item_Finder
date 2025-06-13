@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "./Page.css";
-// import "./ItCard.css";
-// import "../../global.css"
 
-// Dummy icons (replace with your preferred icons or SVGs)
 const Clock = () => <span className="claim-icon">🕒</span>;
 const CheckCircle = () => <span className="claim-icon">✅</span>;
 const AlertCircle = () => <span className="claim-icon">⚠️</span>;

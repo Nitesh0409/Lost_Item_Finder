@@ -1,0 +1,112 @@
+/* src/auth.css */
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: linear-gradient(135deg, #2a1c3a 0%, #3e2561 100%);
+    margin: 0;
+    color: #fff;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-card {
+    background: rgba(44, 42, 68, 0.97);
+    border-radius: 16px;
+    box-shadow: 0 2px 24px rgba(0, 0, 0, 0.14);
+    padding: 36px 32px 28px 32px;
+    max-width: 540px;
+    width: 100%;
+    margin: 32px auto;
+}
+
+.auth-card h2 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.auth-form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
+}
+
+.auth-form-group label {
+    margin-bottom: 7px;
+    font-size: 1rem;
+    color: #bdb7e5;
+    font-weight: 500;
+}
+
+.auth-form-group input {
+    padding: 11px 13px;
+    border-radius: 8px;
+    border: 1px solid #3e2561;
+    background: #271f3f;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.auth-form-group input:focus {
+    border-color: #a259ff;
+    background: #231942;
+}
+
+.auth-btn-primary {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #a259ff 0%, #3ac569 100%);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+}
+
+.auth-btn-primary:hover {
+    background: linear-gradient(90deg, #7c3aed 0%, #22c55e 100%);
+}
+
+.auth-link-text {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 1rem;
+    color: #bdb7e5;
+}
+
+.auth-link-text a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.auth-link-text a:hover {
+    color: #a259ff;
+}
+
+@media (max-width: 500px) {
+    .auth-card {
+        padding: 22px 8vw;
+        max-width: 98vw;
+    }
+}

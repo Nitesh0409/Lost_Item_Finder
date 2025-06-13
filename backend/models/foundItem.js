@@ -10,23 +10,35 @@ const foundItemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  images: {
+  image: {
     type: String,
     required: false,
   },
-  description: String,
-  location: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      required: false,
-    },
-    coordinates: {
-      type: [Number],
-      required: false,
-    },
+  description: {
+    type: String,
+    required: false,
   },
-  tags: [String], // e.g., ['purse', 'black']
+  location: {
+    type: String,
+    required: false,
+  },
+  dateFound: {
+    type: Date,
+    required: false,
+  },
+  tags: {
+    type: [String],
+    default: [],
+  },
+
+  contactInfo: {
+    type: String,
+    required: false,
+  },
+  safeLocation: {
+    type: String,
+    required: false,
+  },
   dateReported: {
     type: Date,
     default: Date.now,
@@ -36,36 +48,19 @@ const foundItemSchema = new mongoose.Schema({
     enum: ["open", "claimed", "closed"],
     default: "open",
   },
-  claimed: {
-    isClaimed: {
-      type: Boolean,
-      default: false,
-    },
-    claimedBy: {
+  matchedLostItems: [
+    {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
-  },
-  delivered: {
-    isDelivered: {
-      type: Boolean,
-      default: false,
-    },
-    deliveredTo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
-  },
+      ref: "LostItem",
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-foundItemSchema.index({ location: "2dsphere" });
-foundItemSchema.index({ tags: 1 });
+// Optional index for searchability
 foundItemSchema.index({ title: "text", description: "text" });
 
 const FoundItem = mongoose.model("FoundItem", foundItemSchema);

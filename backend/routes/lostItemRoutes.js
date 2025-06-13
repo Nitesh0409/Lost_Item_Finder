@@ -1,11 +1,15 @@
 const express = require('express');
-const lostItemValidators = require("../validators/lostItemsValidators");
+const {validateLostItem} = require("../validators/lostItemsValidators");
 const lostItemControllers = require("../controllers/itemControllers/lostItems");
+
+const authenticateUser = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
+router.use(authenticateUser);
+
 // Add a new lost item
-router.post("/addLostItem", lostItemValidators, lostItemControllers.addLostItem);
+router.post("/addLostItem", validateLostItem, lostItemControllers.addLostItem);
 
 // Get a specific lost item by ID
 router.get("/lostItem/:id", lostItemControllers.getLostItem);
@@ -17,6 +21,6 @@ router.get("/lostItems", lostItemControllers.getAllLostItems);
 router.delete("/lostItem/:id", lostItemControllers.deleteLostItem);
 
 // Update a lost item by ID
-router.put("/lostItem/:id", lostItemValidators, lostItemControllers.updateLostItem);
+router.put("/lostItem/:id", validateLostItem, lostItemControllers.updateLostItem);
 
 module.exports = router;
