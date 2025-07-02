@@ -55,7 +55,7 @@ Coming soon (deployment in progress)
 ## Author
 
 Nitesh Kanojia  
-[LinkedIn](inkedin.com/in/nitesh-kkanojia-a839b9309)  
+[LinkedIn](https://inkedin.com/in/nitesh-kkanojia-a839b9309)  
 [GitHub](https://github.com/nitesh0409)
 
 ## License
