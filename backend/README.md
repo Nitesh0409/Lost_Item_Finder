@@ -1,9 +1,6 @@
 
----
-
 ###  `backend/README.md` (Node.js + Express)
 
-```md
 # Backend – Lost Item Finder
 
 This folder contains the Express.js API for Lost Item Finder.
