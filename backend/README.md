@@ -1,16 +1,22 @@
 
 ---
 
-## 🛠 Backend `README.md`
-
-> 📄 `lost-item-finder/backend/README.md`
+###  `backend/README.md` (Node.js + Express)
 
 ```md
-# Lost Item Finder – Backend
+# Backend – Lost Item Finder
 
-Node.js + Express backend API.
+This folder contains the Express.js API for Lost Item Finder.
 
-## Setup
+## Tech Stack
+
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- JWT Authentication
+- Multer (for image handling)
+
+## Setup Instructions
 
 ```bash
 cd backend
