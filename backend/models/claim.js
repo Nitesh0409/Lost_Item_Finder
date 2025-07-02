@@ -14,24 +14,31 @@ const claimSchema = new mongoose.Schema({
     claimantId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
-    },
+      },
     authorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
+    description: {
+        type: String,
+        required: false,
+    },
+    contactInfo: {
+        type: String,
+        required: false,
+    },
+
+    proof: {
+        filename: String,
+        path: String,
+        mimetype: String,
+        size: Number,
+      },
     status: {
         type: String,
         enum: ["pending", "accepted", "rejected"],
         default: "pending",
-    },
-    delivered: {
-        type: Boolean,
-        default: false,
-    },
-    deliveredAt: {
-        type: Date,
     },
     createdAt: {
         type: Date,

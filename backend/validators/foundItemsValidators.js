@@ -11,21 +11,13 @@ exports.validateFoundItem = [
     .isString()
     .withMessage("Description must be a string."),
 
-  body("images")
-    .optional()
-    .isString()
-    .withMessage("Images must be a string URL.")
-    .bail()
-    .isURL()
-    .withMessage("Image must be a valid URL."),
-
-  body("tags")
-    .optional()
-    .isArray()
-    .withMessage("Tags should be an array.")
-    .bail()
-    .custom((tags) => tags.every(tag => typeof tag === "string"))
-    .withMessage("Each tag must be a string."),
+  // body("tags")
+  //   .optional()
+  //   .isArray()
+  //   .withMessage("Tags should be an array.")
+  //   .bail()
+  //   .custom((tags) => tags.every(tag => typeof tag === "string"))
+  //   .withMessage("Each tag must be a string."),
 
   // Validate GeoJSON location if present
   // body("location.type")

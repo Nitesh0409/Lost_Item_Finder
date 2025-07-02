@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
+import { useToaster } from "../../components/ui/Toaster";
+import ClaimButton from "../../components/items/claimButton";
+import MapRouteView from "../../components/MapRouteView";
 import "./details.css";
 
 function Icon({ name, className = "" }) {
@@ -27,17 +30,17 @@ export default function DetailsPage() {
   const [finder, setFinder] = useState(null);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const [activeTab, setActiveTab] = useState("details");
+  const [activeTab, setActiveTab] = useState("location");
   const type = queryParams.get("type");
+
+  const toast = useToaster();
 
   const token = localStorage.getItem("token");
 
   let currUser = null;
-  // console.log(token);
   if (token) {
     const decode = jwtDecode(token);
     currUser = decode.userId;
-    // console.log(currUser);
   }
 
   useEffect(() => {
@@ -49,7 +52,7 @@ export default function DetailsPage() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -57,11 +60,12 @@ export default function DetailsPage() {
         setItem(data.item);
       } catch (err) {
         console.error("Failed to fetch item details:", err);
+        toast("Failed to fetch item details:","error");
       }
     };
     fetchItem();
   }, [id, type]);
-  
+
   useEffect(() => {
     const fetchFinder = async () => {
       if (!item?.userId) return;
@@ -76,12 +80,11 @@ export default function DetailsPage() {
             },
           }
         );
-        // if (!res.ok) throw new Error("user not found");
         const data = await res.json();
-        // console.log(data);
         setFinder(data.user);
       } catch (err) {
-        console.error("Failed to fetch item details:", err);
+        console.error("Failed to fetch finder details:", err);
+        toast("Failed to fetch finder details","error");
       }
     };
     fetchFinder();
@@ -93,6 +96,9 @@ export default function DetailsPage() {
 
   const isOwner = item.userId === currUser;
 
+  const imageUrl = item.image?.path
+    ? `http://localhost:8080/${item.image.path.replace("\\", "/")}`
+    : "fallback-image-url.png";
 
   const handleEdit = async () => {
     const confirmEdit = window.confirm(
@@ -107,22 +113,22 @@ export default function DetailsPage() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       if (!response.ok) {
         const errData = await response.json();
-        throw new Error(errData.message || "Failed to update");
+        toast(errData.message || "Failed to update","error");
       }
 
       const result = await response.json();
-      alert(result.message);
+      toast(result.message);
       window.location.href = `/${type}-items`;
     } catch (error) {
       console.error("Edit failed:", error.message);
-      alert("Failed to Edit item.");
+      toast("Failed to Edit item.","error");
     }
   };
 
@@ -139,25 +145,24 @@ export default function DetailsPage() {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       if (!response.ok) {
         const errData = await response.json();
-        throw new Error(errData.message || "Failed to delete");
+        toast(errData.message || "Failed to delete","error");
       }
 
       const result = await response.json();
-      alert(result.message);
+      toast(result.message);
       window.location.href = `/${type}-items`;
     } catch (error) {
       console.error("Delete failed:", error.message);
-      alert("Failed to delete item.");
+      toast("Failed to delete item.","error");
     }
   };
-
 
   return (
     <div className="lf-item-bg">
@@ -170,10 +175,9 @@ export default function DetailsPage() {
               <div className="lf-item-img-wrap">
                 <div className="lf-item-img">
                   <img
-                    src={
-                      item.image || "https://placehold.co/400x400?text=No+Image"
-                    }
+                    src={imageUrl}
                     alt={item.title}
+                    style={{ maxWidth: "100%", objectFit: "inherit" }}
                   />
                   <span className="lf-badge lf-badge-green lf-badge-abs">
                     {type === "lost" ? "Lost Item" : "Found Item"}
@@ -211,12 +215,6 @@ export default function DetailsPage() {
                     </div>
                   )}
                 </div>
-                <div className="lf-item-btn-row">
-                  <button className="lf-btn lf-btn-cyan">
-                    <Icon name="message" className="lf-mr-2" />
-                    {type === "lost" ? "Claim Finding" : "Claim Item"}
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -224,14 +222,6 @@ export default function DetailsPage() {
           {/* Tabs */}
           <div className="lf-details-card">
             <div className="lf-tabs">
-              <button
-                className={`lf-tab-btn${
-                  activeTab === "details" ? " active" : ""
-                }`}
-                onClick={() => setActiveTab("details")}
-              >
-                Details
-              </button>
               <button
                 className={`lf-tab-btn${
                   activeTab === "location" ? " active" : ""
@@ -251,34 +241,6 @@ export default function DetailsPage() {
             </div>
 
             <div className="lf-tab-content">
-              {activeTab === "details" && (
-                <div>
-                  <h3 className="lf-tab-title">Item Description</h3>
-                  <p>
-                    {item.description || "No detailed description available."}
-                  </p>
-                  <div className="lf-separator" />
-                  <div className="lf-details-grid">
-                    <div>
-                      <h4>Category</h4>
-                      <p>{item.category || "Unknown"}</p>
-                    </div>
-                    {/* <div>
-                      <h4>Condition</h4>
-                      <p>{item.condition || "Not specified"}</p>
-                    </div>
-                    <div>
-                      <h4>Color</h4>
-                      <p>{item.color || "N/A"}</p>
-                    </div>
-                    <div>
-                      <h4>Size</h4>
-                      <p>{item.size || "N/A"}</p>
-                    </div> */}
-                  </div>
-                </div>
-              )}
-
               {activeTab === "location" && (
                 <div>
                   <h3 className="lf-tab-title">Location Details</h3>
@@ -291,18 +253,14 @@ export default function DetailsPage() {
                     <span>Coordinates: {item.coordinates || "N/A"}</span>
                   </div>
                   <div className="lf-map-placeholder">
-                    <Icon name="mapPin" className="lf-map-icon" />
-                    <h4>Interactive Map</h4>
-                    <p>Map integration coming soon...</p>
-                    <div className="lf-map-info-row">
-                      <div>
-                        <div className="lf-bold">Distance</div>
-                        <div>0.5 miles away</div>
-                      </div>
-                      <div>
-                        <div className="lf-bold">Travel Time</div>
-                        <div>~10 min walk</div>
-                      </div>
+                    <div className="lf-map-wrapper">
+                      <MapRouteView
+                        destination={
+                          typeof item.coordinates === "string"
+                            ? item.coordinates.split(",").map(Number)
+                            : item.coordinates
+                        }
+                      />
                     </div>
                   </div>
                 </div>
@@ -327,9 +285,7 @@ export default function DetailsPage() {
                             day: "numeric",
                           })}
                         </div>
-                        <div>
-                          at {item.location}
-                        </div>
+                        <div>at {item.location}</div>
                       </div>
                     </div>
                     <div className="lf-timeline-row">
@@ -421,11 +377,12 @@ export default function DetailsPage() {
           {/* Quick Actions */}
           <div className="lf-details-card">
             <h3 className="lf-sidebar-title">Quick Actions</h3>
-            {!isOwner && (
-              <button className="lf-btn lf-btn-cyan lf-w-full">
-                Claim This Item
-              </button>
-            )}
+            <ClaimButton
+              isOwner={finder?._id === currUser}
+              itemId={item?._id}
+              itemType={type === "lost" ? "LostItem" : "FoundItem"}
+              authorId={item.userId}
+            />
             <button className="lf-btn lf-btn-outline lf-w-full">
               Save to Favorites
             </button>

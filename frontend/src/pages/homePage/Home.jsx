@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./Home.css";
-// import "../../global.css"
 
-// Icon placeholders (replace with SVG or react-icons as needed)
 const Search = () => <span className="icon">🔍</span>;
 const MapPin = () => <span className="icon">📍</span>;
 const Clock = () => <span className="icon">⏰</span>;
@@ -13,12 +11,19 @@ const Star = () => <span className="icon">⭐</span>;
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("token"));
+  }, []);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) return null;
+
+
 
   return (
     <div className="home-bg">
@@ -37,16 +42,29 @@ export default function HomePage() {
               Reuniting people with their precious belongings through community
               collaboration
             </p>
-            <div className="hero-buttons">
-              <a href="/report-lost">
-                <button className="btn btn-primary">
-                  Report Lost Item <ArrowRight />
-                </button>
-              </a>
-              <a href="/report-found">
-                <button className="btn btn-outline">Report Found Item</button>
-              </a>
-            </div>
+            {isLoggedIn ? (
+              <div className="hero-buttons">
+                <a href="/report-lost">
+                  <button className="btn btn-primary">
+                    Report Lost Item <ArrowRight />
+                  </button>
+                </a>
+                <a href="/report-found">
+                  <button className="btn btn-outline">Report Found Item</button>
+                </a>
+              </div>
+            ) : (
+              <div className="hero-buttons">
+                <a href="/login">
+                  <button className="btn btn-primary">
+                    Login<ArrowRight />
+                  </button>
+                </a>
+                <a href="/sign-up">
+                  <button className="btn btn-outline">Sign Up</button>
+                </a>
+              </div>
+            )}
           </motion.div>
         </div>
         {/* Floating Elements */}

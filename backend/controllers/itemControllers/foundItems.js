@@ -18,13 +18,29 @@ exports.addFoundItem = async (req, res,next) => {
     description,
     category,
     location,
+    coordinates,
     tags,
-    image,
     dateFound,
     contactInfo,
     safeLocation } = req.body;
   
-  const userId = req.user.userId;
+    const userId = req.user.userId;
+  
+  const parsedTags = typeof tags === "string" ? JSON.parse(tags) : tags;
+  const parsedCoordinates = typeof coordinates === "string" ? JSON.parse(coordinates) : coordinates;
+
+  // console.log(req.file);
+
+  // Handle uploaded image
+  const imageInfo = req.file
+    ? {
+      filename: req.file.filename,
+      path: req.file.path,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+    }
+    : null;
+  
 
   const foundItem = new FoundItem({
     userId,
@@ -32,11 +48,12 @@ exports.addFoundItem = async (req, res,next) => {
     description,
     category,
     location,
-    tags,
-    image,
+    coordinates : parsedCoordinates,
+    tags: parsedTags,
+    image: imageInfo, // ← now storing file info, not URL
     dateFound,
     contactInfo,
-    safeLocation
+    safeLocation,
   });
 
   try {
@@ -129,7 +146,7 @@ exports.deleteFoundItem = async (req, res, next) => {
 
 exports.updateFoundItem = async (req, res, next) => {
   const itemId = req.params.id;
-  const { itemName, description, tags, images, location } = req.body;
+  const { itemName, description, tags, image, location } = req.body;
 
   const userId = req.user.userId;
 
@@ -150,8 +167,9 @@ exports.updateFoundItem = async (req, res, next) => {
     item.title = itemName || item.title;
     item.description = description || item.description;
     item.tags = tags || item.tags;
-    item.images = images || item.images;
+    item.image = image || item.image;
     item.location = location || item.location;
+    item.coordinates = coordinates || item.coordinates;
 
     const updatedItem = await item.save();
     res.status(200).json({

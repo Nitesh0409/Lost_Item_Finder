@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Calendar, DollarSign, User } from "react-feather";
+import { MapPin, Calendar, DollarSign } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 
@@ -8,27 +8,36 @@ import "./ItemCard.css";
 export default function ItemCard({ item, type }) {
   const navigate = useNavigate();
 
-  const date = type === "lost" ? item.dateLost : item.dateFound;
+  const date = new Date(
+    type === "lost" ? item.dateLost : item.dateFound
+  ).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   const dateLabel = type === "lost" ? "Lost on" : "Found on";
 
   const token = localStorage.getItem("token");
   let currUser = null;
-  // console.log(token);
   if (token) {
     const decode = jwtDecode(token);
     currUser = decode.userId;
-    // console.log(currUser);
   }
 
   const isOwner = item.userId === currUser;
 
+  const imageUrl = item.image?.path
+    ? `http://localhost:8080/${item.image.path.replace("\\", "/")}`
+    : "fallback-image-url.png";
 
   return (
     <div className="card">
       <div className="card-image-wrapper">
         <img
-          src={item.image || "/placeholder.svg"}
+          src={imageUrl}
           alt={item.title}
+          style={{ maxWidth: "100%", objectFit: "inherit" }}
           className="card-image"
         />
         <div className="badge badge-category">{item.category}</div>
@@ -75,16 +84,15 @@ export default function ItemCard({ item, type }) {
             Details
           </button>
 
-          {!isOwner && (<button
-            className={`btn-primary ${type === "lost" ? "btn-lost" : "btn-found"
+          {/* {!isOwner && (
+            <button
+              className={`btn-primary ${
+                type === "lost" ? "btn-lost" : "btn-found"
               }`}
-          >
-            {type === "lost" ? "Claim finding" : "Claim Item"}
-          </button>)}
-
-          {!isOwner && (<button className="btn-icon" aria-label="User">
-            <User size={16} />
-          </button>)}
+            >
+              {type === "lost" ? "Claim finding" : "Claim Item"}
+            </button>
+          )} */}
         </div>
       </div>
     </div>

@@ -1,15 +1,20 @@
 // src/Signup.jsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./auth.css";
 
+import { useToaster } from "../../components/ui/Toaster";
+
 export default function SignUpPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
+  const toast = useToaster();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +28,7 @@ export default function SignUpPage() {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match!");
+      toast("Passwords don't match!","error");
       return;
     }
 
@@ -43,13 +48,12 @@ export default function SignUpPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        // If validation fails or user already exists, show error
-        alert(data.message || "Signup failed");
+        toast(data.message || "Signup failed","error");
         console.error(data);
         return;
       }
 
-      alert("Signup successful!");
+      toast("Signup successful!","success");
       console.log("Server response:", data);
 
       // Reset form
@@ -59,9 +63,12 @@ export default function SignUpPage() {
         password: "",
         confirmPassword: "",
       });
+
+      navigate('/login');
+
     } catch (err) {
       console.error("Error:", err);
-      alert("Something went wrong. Please try again.");
+      toast("Something went wrong. Please try again.","error");
     }
   };
   

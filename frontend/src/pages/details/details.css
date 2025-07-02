@@ -264,6 +264,14 @@ body {
     border-radius: 2px;
 }
 
+.lf-map-wrapper {
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
 .lf-details-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

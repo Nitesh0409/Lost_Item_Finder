@@ -6,10 +6,23 @@ const authenticateUser = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/"); // folder must exist
+    },
+    filename: (req, file, cb) => {
+        const uniqueName = `${Date.now()}-${file.originalname}`;
+        cb(null, uniqueName);
+    },
+});
+
+const upload = multer({ storage });
+
 router.use(authenticateUser);
 
-// Add a new lost item
-router.post("/addLostItem", validateLostItem, lostItemControllers.addLostItem);
+router.post("/addLostItem", upload.single("image"), validateLostItem, lostItemControllers.addLostItem);
 
 // Get a specific lost item by ID
 router.get("/lostItem/:id", lostItemControllers.getLostItem);

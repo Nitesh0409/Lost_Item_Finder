@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import ItemCard from "@/components/items/itemCard";
-import { mockLostItems } from "@/lib/mockData";
+
+import { useToaster } from "../../components/ui/Toaster";
 
 const SearchIcon = () => <span className="place-icon">🔍</span>;
-const FilterIcon = () => <span className="place-icon">⚙️</span>;
 
 const categories = [
   "All",
@@ -21,10 +21,12 @@ const categories = [
 
 export default function LostItemsPage() {
   const [items, setItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState(mockLostItems);
+  const [filteredItems, setFilteredItems] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
+
+  const toast = useToaster();
 
   useEffect(() => {
     const fetchLostItems = async () => {
@@ -43,6 +45,7 @@ export default function LostItemsPage() {
         setItems(data.items);
       } catch (error) {
         console.error("Error fetching lost items:", error);
+        toast("Error fetching lost items","toast");
       }
     };
 
@@ -87,8 +90,6 @@ export default function LostItemsPage() {
 
     setFilteredItems(filtered);
   }, [items, searchTerm, selectedCategory, sortBy]);
-
-  // console.log(filteredItems.map((item) => item._id));
 
 
   return (
@@ -143,10 +144,6 @@ export default function LostItemsPage() {
                   <option value="oldest">Oldest First</option>
                   <option value="reward">Highest Reward</option>
                 </select>
-
-                <button className="btn-outline">
-                  <FilterIcon /> More Filters
-                </button>
               </div>
             </div>
           </div>
@@ -154,13 +151,13 @@ export default function LostItemsPage() {
           {/* Results Count */}
           <div className="mb-6">
             <p className="results-count">
-              Showing {filteredItems.length} of {items.length} lost items
+              Showing {filteredItems?.length} of {items?.length} lost items
             </p>
           </div>
 
           {/* Items Grid */}
           <div className="items-grid">
-            {filteredItems.map((item, index) => (
+            {filteredItems?.map((item, index) => (
               <motion.div
                 key={item._id || index}
                 initial={{ opacity: 0, y: 20 }}
@@ -172,7 +169,7 @@ export default function LostItemsPage() {
             ))}
           </div>
 
-          {filteredItems.length === 0 && (
+          {filteredItems?.length === 0 && (
             <div className="text-center py-12">
               <p className="no-results">
                 No items found matching your criteria.

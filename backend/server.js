@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require("path");
+
 
 require("dotenv").config();
 
@@ -11,6 +13,9 @@ const lostItemRoutes = require("./routes/lostItemRoutes");
 const foundItemRoutes = require("./routes/foundItemRoutes");
 const authRoutes = require("./routes/authRoutes");
 const homeRoutes = require("./routes/home");
+const claimRoutes = require("./routes/claimRoutes");
+const mapRoutes = require("./routes/mapRoutes");
+
 const dbConnect = require("./config/db");
 
 app.use(bodyParser.json());
@@ -22,21 +27,29 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", "true"); // ✅ needed for auth
 
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // ✅ Handle preflight
+    return res.sendStatus(200);
   }
 
   next();
 });
 
 
+
 dbConnect();
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // app.use("/api/auth",ItemRoutes.);
 app.use("/api/items/lost", lostItemRoutes);
 app.use("/api/items/found", foundItemRoutes);
 
 // user routes
-app.use("/api/user",authRoutes);
+app.use("/api/user", authRoutes);
+
+//claim item
+app.use("/api/claim", claimRoutes);
+
+app.use("/api/map", mapRoutes);
 
 app.use("/", homeRoutes);
 

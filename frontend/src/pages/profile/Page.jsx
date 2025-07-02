@@ -1,27 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./Page.css";
 
-// Icon placeholders (replace with SVG or react-icons as needed)
+import { useToaster } from "../../components/ui/Toaster";
+
 const SettingsIcon = () => <span className="icon">⚙️</span>;
 const StarIcon = () => <span className="icon-star">⭐</span>;
-const AwardIcon = () => <span className="icon-award">🏅</span>;
 
 export default function ProfilePage() {
-  const [profile, setProfile] = useState({
-    name: "John Doe",
-    email: "john.doe@email.com",
-    phone: "+1 (555) 123-4567",
-    location: "New York, NY",
-    bio: "Community member helping reunite people with their lost belongings.",
-  });
+  const [profile, setProfile] = useState(null);
 
-  const stats = {
-    itemsReported: 12,
-    itemsFound: 8,
-    successfulReunions: 15,
-    communityRating: 4.8,
-  };
+  const toast = useToaster();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch(`http://localhost:8080/api/user/profile`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        setProfile(data.user);
+      } catch (err) {
+        console.error("Failed to fetch profile details:", err);
+        toast("Failed to fetch profile details", "error");
+      }
+    };
+    fetchProfile();
+  }, []);
+
 
   const recentActivity = [
     {
@@ -46,6 +57,7 @@ export default function ProfilePage() {
 
   const [tab, setTab] = useState("activity");
 
+
   return (
     <div className="profile-bg">
       <div className="container">
@@ -67,24 +79,26 @@ export default function ProfilePage() {
               <div className="card shadow mb-6">
                 <div className="card-content text-center">
                   <div className="avatar">
-                    <img
-                      src="/placeholder.svg?height=96&width=96"
-                      alt={profile.name}
-                      className="avatar-img"
-                    />
                     <div className="avatar-fallback">
-                      {profile.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                      {(() => {
+                        if (!profile || !profile.userName) return "??";
+
+                        const nameParts = profile.userName.trim().split(/\s+/);
+
+                        if (nameParts.length >= 2) {
+                          return `${nameParts[0][0]}${nameParts[1][0]}`.toUpperCase();
+                        }
+
+                        return nameParts[0].substring(0, 2).toUpperCase();
+                      })()}
                     </div>
                   </div>
-                  <h2 className="profile-name">{profile.name}</h2>
-                  <p className="profile-bio">{profile.bio}</p>
+                  <h2 className="profile-name">{profile?.userName}</h2>
+                  <p className="profile-bio">{profile?.bio}</p>
                   <div className="profile-rating">
                     <StarIcon />
                     <span className="profile-rating-value">
-                      {stats.communityRating}
+                      {profile?.rating}
                     </span>
                     <span className="profile-rating-label">
                       Community Rating
@@ -101,29 +115,17 @@ export default function ProfilePage() {
                 <div className="card shadow">
                   <div className="card-content text-center">
                     <div className="stat-value indigo">
-                      {stats.itemsReported}
+                      {profile?.itemsReportedLost?.length}
                     </div>
                     <div className="stat-label">Items Reported</div>
                   </div>
                 </div>
                 <div className="card shadow">
                   <div className="card-content text-center">
-                    <div className="stat-value cyan">{stats.itemsFound}</div>
-                    <div className="stat-label">Items Found</div>
-                  </div>
-                </div>
-                <div className="card shadow">
-                  <div className="card-content text-center">
-                    <div className="stat-value green">
-                      {stats.successfulReunions}
+                    <div className="stat-value cyan">
+                      {profile?.itemsReportedFound?.length}
                     </div>
-                    <div className="stat-label">Reunions</div>
-                  </div>
-                </div>
-                <div className="card shadow">
-                  <div className="card-content text-center">
-                    <AwardIcon />
-                    <div className="stat-label">Helper Badge</div>
+                    <div className="stat-label">Items Found</div>
                   </div>
                 </div>
               </div>
@@ -198,7 +200,7 @@ export default function ProfilePage() {
                             <label htmlFor="name">Full Name</label>
                             <input
                               id="name"
-                              value={profile.name}
+                              value={profile.userName}
                               onChange={(e) =>
                                 setProfile((prev) => ({
                                   ...prev,
@@ -227,7 +229,7 @@ export default function ProfilePage() {
                             <label htmlFor="phone">Phone</label>
                             <input
                               id="phone"
-                              value={profile.phone}
+                              value={profile?.phone}
                               onChange={(e) =>
                                 setProfile((prev) => ({
                                   ...prev,
@@ -241,7 +243,7 @@ export default function ProfilePage() {
                             <label htmlFor="location">Location</label>
                             <input
                               id="location"
-                              value={profile.location}
+                              value={profile?.location}
                               onChange={(e) =>
                                 setProfile((prev) => ({
                                   ...prev,

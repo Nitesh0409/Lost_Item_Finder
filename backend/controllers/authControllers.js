@@ -80,7 +80,7 @@ exports.login = async (req, res, next) => {
         const token = jwt.sign(
             { userId: user._id, email: user.email },
             process.env.JWT_SECRET || "fallback_secret_key",
-            { expiresIn: process.env.JWT_EXPIRES_IN || "1h" }
+            { expiresIn: process.env.JWT_EXPIRES_IN}
         );
 
         // 4. Send response
@@ -105,6 +105,26 @@ exports.getUser = async (req, res, next) => {
 
     try {
         const user = await User.findById(userId);
+        if (!user) {
+            const error = new Error("user not Found");
+            error.statusCode = 400;
+            return next(error);
+        }
+
+        res.status(200).json({ user });
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+            next(err);
+        }
+    }
+}
+
+exports.getProfile = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.userId).select("-password")
+
         if (!user) {
             const error = new Error("user not Found");
             error.statusCode = 400;

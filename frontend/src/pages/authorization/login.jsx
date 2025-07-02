@@ -1,9 +1,14 @@
 // src/Login.jsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './auth.css';
 
+import { useToaster } from "../../components/ui/Toaster";
+
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const toast = useToaster();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -32,32 +37,45 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message || "Login failed");
+        toast(data.message || "Signup failed", "error");
         console.error(data);
         return;
       }
 
-      alert("Login successful!");
-      console.log("User Logged In:", data);
+      toast("Login successful!", "info");
 
-      // Optional: Save token to localStorage for future auth
-      localStorage.setItem("token", data.token); // if you return token in response
+      localStorage.setItem("token", data.token);
 
-      // Reset form
+      // Decode the JWT to get expiration time
+      const decodedToken = JSON.parse(atob(data.token.split(".")[1]));
+      const expirationTime = decodedToken.exp * 1000; // convert to ms
+
+      // Calculate time remaining until expiration
+      const currentTime = Date.now();
+      const timeUntilExpiry = expirationTime - currentTime;
+
+      if (timeUntilExpiry > 0) {
+        // Set timeout to remove token after it expires
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          toast("Session expired. Please log in again.", "warning");
+          console.log("Token expired and removed from localStorage.");
+          navigate("/login");
+        }, timeUntilExpiry);
+      }
+
       setFormData({
         email: "",
         password: "",
       });
 
-      // Optional: Redirect to dashboard or homepage
-      // navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       console.error("Login error:", err);
-      alert("Something went wrong during login.");
+      toast("Something went wrong during login.","error");
     }
   };
   
-
   return (
     <div className="auth-container">
       <div className="auth-card">

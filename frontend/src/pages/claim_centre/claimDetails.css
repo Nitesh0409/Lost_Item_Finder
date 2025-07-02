@@ -1,0 +1,801 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Modern CSS Variables for Consistent Design */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --warning-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    --danger-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+
+    --bg-primary: #0f0f23;
+    --bg-secondary: #1a1a2e;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --bg-card-hover: rgba(255, 255, 255, 0.1);
+
+    --text-primary: #ffffff;
+    --text-secondary: #b4b4b4;
+    --text-muted: #8d8dbe;
+
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+
+    --border-radius: 16px;
+    --border-radius-sm: 8px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-primary);
+    /* Use a solid background if no animated gradient needed globally */
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Add this class to your main container if you want the animated background */
+.claims-hub-container.claim-center-bg {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    /* Keep padding from previous container */
+    box-sizing: border-box;
+    /* Ensure padding is included in the element's total width and height */
+}
+
+.claims-hub-container.claim-center-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(1deg);
+    }
+}
+
+
+.header {
+    margin-bottom: 30px;
+    text-align: center;
+    /* Center the header text */
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
+    /* Ensure header is above the animated background pseudo-element */
+}
+
+.header h1 {
+    font-size: 3.5rem;
+    /* Updated from 2.5em */
+    font-weight: 800;
+    /* Updated from 700 */
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+    /* Updated from 5px */
+}
+
+.header h1::after {
+    /* Added for the underline effect */
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+    box-shadow: var(--shadow-glow);
+}
+
+.header p {
+    font-size: 1.25rem;
+    /* Updated from 1.1em */
+    color: var(--text-secondary);
+    /* Updated from text-light */
+    margin-top: 0;
+}
+
+.main-content {
+    display: flex;
+    gap: 30px;
+    flex-grow: 1;
+    position: relative;
+    z-index: 1;
+    /* Ensure content is above the animated background pseudo-element */
+}
+
+.sidebar {
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-left: 7%;
+    width: 280px;
+    height: fit-content;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(20px);
+    transition: var(--transition);
+}
+
+.sidebar:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    /* Added glow on hover */
+}
+
+.item-details-claim {
+    background-color: rgb(82, 82, 109);
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 32px 24px;
+    max-width: 350px;
+    margin: 40px auto;
+    text-align: center;
+    transition: box-shadow 0.2s;
+}
+
+.item-details-title{
+    background-color: rgb(155, 54, 231);
+    border-radius: 50px;
+
+    
+}
+
+.item-details-claim:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.item-details-claim h2 {
+    font-size: 1.6rem;
+    margin-bottom: 18px;
+    color: #232323;
+    letter-spacing: 1px;
+}
+
+.item-details-image {
+    margin-bottom: 22px;
+}
+
+.item-details-image img {
+    width: 100%;
+    max-width: 220px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10);
+    object-fit: cover;
+    transition: transform 0.2s;
+}
+
+.item-details-image img:hover {
+    transform: scale(1.04);
+}
+
+.item-details-claim button {
+    background: linear-gradient(90deg, #4f8cff 0%, #2358e8 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(79, 140, 255, 0.10);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.item-details-claim button:hover {
+    background: linear-gradient(90deg, #2358e8 0%, #4f8cff 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.listUsers {
+    background-color: rgb(82, 82, 109);
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 32px 24px;
+    max-width: 350px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+
+.sidebar h2 {
+    font-size: 1.5em;
+    color: var(--text-primary);
+    /* Updated from text-color */
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.claim-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: var(--border-radius-sm);
+    /* Updated from 8px */
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: var(--transition);
+    /* Updated transition */
+    position: relative;
+    overflow: hidden;
+    /* For the button hover effect */
+}
+
+.claim-item::before {
+    /* Added for the button hover effect */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transition: left 0.5s;
+}
+
+.claim-item:hover::before {
+    left: 100%;
+}
+
+.claim-item:hover {
+    background: var(--bg-card-hover);
+    /* Updated hover background */
+    transform: translateY(-1px);
+}
+
+.claim-item.active {
+    background: var(--primary-gradient);
+    /* Updated active background to gradient */
+    color: white;
+    /* Ensure text is white on gradient */
+    border-left: none;
+    /* Remove old border-left */
+    padding-left: 15px;
+    /* Reset padding */
+    box-shadow: var(--shadow-sm);
+    /* Added shadow for active state */
+}
+
+.claim-item.active .avatar {
+    background-color: rgba(255, 255, 255, 0.2);
+    /* Adjust avatar color for active gradient */
+    color: var(--text-primary);
+}
+
+.claim-item.active h3,
+.claim-item.active p {
+    color: white;
+    /* Ensure text is white on active gradient */
+}
+
+
+.claim-item .avatar {
+    width: 45px;
+    height: 45px;
+    background-color: var(--bg-secondary);
+    /* Updated from primary-blue */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.1em;
+    color: var(--text-primary);
+    /* Ensure text is visible */
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.claim-item h3 {
+    margin: 0 0 3px 0;
+    font-size: 1.1em;
+    color: var(--text-primary);
+    /* Updated from text-color */
+    font-weight: 500;
+}
+
+.claim-item p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    /* Updated from text-light */
+}
+
+.claim-item .claim-date {
+    font-size: 0.8em;
+    color: var(--text-muted);
+    opacity: 1;
+}
+
+.claim-details-section {
+    flex-grow: 1;
+    max-width:65%;
+    height: fit-content;
+    background: var(--bg-card);
+    /* Updated from card-bg */
+    border-radius: var(--border-radius);
+    /* Updated from 12px */
+    padding: 25px;
+    box-shadow: var(--shadow-lg);
+    /* Updated from custom shadow */
+    border: 1px solid var(--border-color);
+    /* Added border */
+    backdrop-filter: blur(20px);
+    /* Added blur effect */
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition);
+    /* Added transition */
+}
+
+.claim-details-section:hover {
+    transform: translateY(-2px);
+    /* Added hover effect */
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    /* Added glow on hover */
+}
+
+.evidence-image{
+    max-height: 10%;
+    width: 30%;
+}
+
+.claim-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.claim-details-header h2 {
+    font-size: 1.8em;
+    color: var(--text-primary);
+    /* Updated from text-color */
+    margin: 0;
+    font-weight: 600;
+}
+
+.verification-list{
+    display: flex;
+    flex-direction: column;
+    gap:12px
+}
+
+.claim-card {
+    background-color: transparent;
+    /* No explicit background, inherits from parent */
+    border-radius: var(--border-radius-sm);
+    /* Updated from 10px */
+    padding: 0;
+    /* No padding, inner sections handle it */
+    border: none;
+    /* No explicit border, inner sections handle it */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.claimant-info {
+    display: flex;
+    align-items: center;
+    background: var(--primary-gradient);
+    /* Updated from specific linear gradient */
+    padding: 20px;
+    border-radius: var(--border-radius-sm);
+    /* Updated from 10px */
+    box-shadow: var(--shadow-sm);
+    /* Updated from custom shadow */
+}
+
+.claimant-avatar {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.claimant-text h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.6em;
+    color: #fff;
+    font-weight: 700;
+}
+
+.status-tag {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-right: 10px;
+}
+
+.status-tag.rejected {
+    background: var(--danger-gradient);
+    /* Updated to danger-gradient */
+    color: #fff;
+    box-shadow: var(--shadow-sm);
+}
+
+.claim-type {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.contact-info,
+.location-info,
+.evidence,
+.description-section,
+.evidence-section {
+    background: var(--bg-secondary);
+    /* Updated from bg-dark */
+    padding: 20px;
+    border-radius: var(--border-radius-sm);
+    /* Updated from 10px */
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.claim-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.claim-info-item .icon {
+    font-size: 1.5em;
+    color: var(--primary-gradient);
+    /* Applied primary gradient to icons */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 5px;
+}
+
+.claim-info-item p:first-of-type {
+    font-size: 0.9em;
+    color: var(--text-muted);
+    /* Updated from text-light */
+    margin: 0;
+}
+
+.claim-info-item p:last-of-type {
+    font-size: 1em;
+    color: var(--text-primary);
+    /* Updated from text-color */
+    font-weight: 500;
+    margin: 0;
+    word-break: break-all;
+}
+
+.location-info,
+.description-section,
+.evidence-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.location-info .icon,
+.description-section .icon,
+.evidence-section .icon {
+    font-size: 1.5em;
+    color: var(--primary-gradient);
+    /* Applied primary gradient to icons */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    flex-shrink: 0;
+}
+
+.location-info p:first-of-type,
+.description-section p:first-of-type,
+.evidence-section p:first-of-type {
+    font-size: 0.9em;
+    color: var(--text-muted);
+    /* Updated from text-light */
+    margin: 0;
+    font-weight: 500;
+}
+
+.location-info p:last-of-type,
+.description-section p:last-of-type {
+    font-size: 1em;
+    color: var(--text-primary);
+    /* Updated from text-color */
+    margin: 0;
+}
+
+.evidence-images {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.evidence-placeholder {
+    width: 120px;
+    height: 120px;
+    background-color: var(--bg-card);
+    /* Updated from specific color */
+    border-radius: var(--border-radius-sm);
+    /* Updated from 8px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-secondary);
+    /* Updated from text-light */
+    font-size: 0.9em;
+    border: 1px dashed var(--border-color);
+    /* Updated border color */
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+    /* Added shadow */
+    transition: var(--transition);
+}
+
+.evidence-placeholder:hover {
+    transform: translateY(-2px);
+    background-color: var(--bg-card-hover);
+    border-color: var(--primary-gradient);
+    box-shadow: var(--shadow-glow);
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+            flex-direction: column;
+            gap: 20px;
+        }
+    
+        .sidebar {
+            width: 100%;
+            max-width: none;
+        }
+    
+        .claim-details-section {
+            padding: 20px;
+        }
+    
+        .contact-info {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+
+    .claims-hub-container.claim-center-bg {
+        padding: 15px;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        /* Adjusted for smaller screens */
+    }
+
+    .header p {
+        font-size: 1.1em;
+    }
+
+    .claim-details-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .claimant-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .claimant-avatar {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        padding: 15px;
+    }
+
+    .claim-item {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .claim-item .avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+        margin-right: 10px;
+    }
+
+    .claim-item h3 {
+        font-size: 1em;
+    }
+
+    .claim-item p {
+        font-size: 0.8em;
+    }
+
+    .claim-details-section {
+        padding: 15px;
+    }
+
+    .claim-card {
+        padding: 0;
+        /* No change here */
+        gap: 20px;
+    }
+
+    .claimant-info {
+        padding: 15px;
+    }
+
+    .claimant-text h3 {
+        font-size: 1.4em;
+    }
+
+    .status-tag {
+        font-size: 0.7em;
+        padding: 4px 8px;
+    }
+
+    .claim-type {
+        font-size: 0.8em;
+    }
+
+    .contact-info,
+    .location-info,
+    .description-section,
+    .evidence-section {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .contact-info {
+        grid-template-columns: 1fr;
+    }
+
+    .evidence-images {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .evidence-placeholder {
+        width: 100%;
+        max-width: 200px;
+        height: 100px;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #667eea 100%);
+    /* Slightly darker gradient on hover */
+}
+
+/* Loading Animation */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .claims-hub-container.claim-center-bg::before {
+        /* Adjusted selector for animation */
+        animation: none;
+    }
+}
+
+/* Focus States */
+button:focus,
+.claim-item:focus {
+    outline: 2px solid rgba(102, 126, 234, 0.5);
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #ffffff;
+        --text-secondary: #ffffff;
+        --text-muted: #cccccc;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .claims-hub-container.claim-center-bg::before {
+        /* Adjusted selector */
+        display: none;
+    }
+
+    .sidebar,
+    .claim-details-section {
+        /* Added sections that should break inside avoid */
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+}

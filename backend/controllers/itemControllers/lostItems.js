@@ -18,12 +18,30 @@ exports.addLostItem = async (req, res,next) => {
     description,
     category,
     location,
+    coordinates,
     image,
+    tags,
     dateLost,
     contactInfo,
     reward } = req.body;
   
   const userId = req.user.userId;
+
+  const parsedTags = typeof tags === "string" ? JSON.parse(tags) : tags;
+  const parsedCoordinates = typeof coordinates === "string" ? JSON.parse(coordinates) : coordinates;
+
+  // console.log(req.file);
+
+  // Handle uploaded image
+  const imageInfo = req.file
+    ? {
+      filename: req.file.filename,
+      path: req.file.path,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+    }
+    : null;
+
 
   const lostItem = new LostItem({
     userId,
@@ -31,7 +49,9 @@ exports.addLostItem = async (req, res,next) => {
     description,
     category,
     location,
-    image,
+    coordinates: parsedCoordinates,
+    image: imageInfo,
+    tags: parsedTags,
     dateLost,
     contactInfo,
     reward
@@ -39,6 +59,7 @@ exports.addLostItem = async (req, res,next) => {
 
   try {
     const savedItem = await lostItem.save();
+    // console.log(savedItem);
 
     await User.findByIdAndUpdate(userId, {
       $push: { itemsReportedLost: savedItem._id }
@@ -133,7 +154,7 @@ exports.updateLostItem = async (req, res, next) => {
   const itemId = req.params.id;
   const userId = req.user.userId;
 
-  const { itemName, description, tags, images, location } = req.body;
+  const { itemName, description, tags, image, location } = req.body;
 
   try {
     const item = await LostItem.findById(itemId);
@@ -152,8 +173,10 @@ exports.updateLostItem = async (req, res, next) => {
     item.title = itemName || item.title;
     item.description = description || item.description;
     item.tags = tags || item.tags;
-    item.images = images || item.images;
+    item.image = image || item.image;
     item.location = location || item.location;
+    item.coordinates = coordinates || item.coordinates;
+
 
     const updatedItem = await item.save();
     res.status(200).json({

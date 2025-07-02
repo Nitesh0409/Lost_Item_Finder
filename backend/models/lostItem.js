@@ -10,15 +10,27 @@ const lostItemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  categories: {
     type: String,
-    required: false,
+    required: false
+  },
+  image: {
+    filename: String,
+    path: String,
+    mimetype: String,
+    size: Number,
   },
   description: String,
   location: {
     type: String,
     required: false,
   },
+  coordinates: {
+    type: [Number], // [latitude, longitude]
+    index: '2dsphere',
+    required: false,
+  },
+  
   dateLost: {
     type: Date,
     required: false,
@@ -49,8 +61,14 @@ const lostItemSchema = new mongoose.Schema({
   },
   matchedFoundItems: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "FoundItem",
+      claimId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Claim',
+      },
+      claimedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
     }
   ],
   createdAt: {

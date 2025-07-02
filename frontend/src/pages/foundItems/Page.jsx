@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./Page.css";
 import ItemCard from "@/components/items/itemCard";
-import { mockFoundItems } from "@/lib/mockData";
 
-// Icon placeholders (replace with SVG or react-icons as needed)
+import { useToaster } from "../../components/ui/Toaster";
+
 const SearchIcon = () => <span className="nav-icon">🔍</span>;
-const FilterIcon = () => <span className="nav-icon">⚙️</span>;
 
 const categories = [
   "All",
@@ -23,10 +22,13 @@ const categories = [
 
 export default function FoundItemsPage() {
   const [items,setItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState(mockFoundItems);
+  const [filteredItems, setFilteredItems] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
+
+
+  const toast = useToaster();
 
   useEffect(() => {
       const fetchLostItems = async () => {
@@ -46,6 +48,7 @@ export default function FoundItemsPage() {
           setItems(data.items);
         } catch (error) {
           console.error("Error fetching lost items:", error);
+          toast("Error fetching lost items","error");
         }
       };
   
@@ -140,10 +143,6 @@ export default function FoundItemsPage() {
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
                 </select>
-
-                <button className="btn-outline">
-                  <FilterIcon /> More Filters
-                </button>
               </div>
             </div>
           </div>
@@ -151,13 +150,13 @@ export default function FoundItemsPage() {
           {/* Results Count */}
           <div className="mb-6">
             <p className="results-count">
-              Showing {filteredItems.length} of {items.length} found items
+              Showing {filteredItems?.length} of {items?.length} found items
             </p>
           </div>
 
           {/* Items Grid */}
           <div className="items-grid">
-            {filteredItems.map((item, index) => (
+            {filteredItems?.map((item, index) => (
               <motion.div
                 key={item._id || index}
                 initial={{ opacity: 0, y: 20 }}
@@ -169,7 +168,7 @@ export default function FoundItemsPage() {
             ))}
           </div>
 
-          {filteredItems.length === 0 && (
+          {filteredItems?.length === 0 && (
             <div className="text-center py-12">
               <p className="no-results">
                 No items found matching your criteria.
