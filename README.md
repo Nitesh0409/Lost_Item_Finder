@@ -4,7 +4,7 @@ Lost Item Finder is a full-stack web application that allows campus users to rep
 
 ## Tech Stack
 
-- Frontend: React (Vite), Tailwind CSS
+- Frontend: React (Vite), css
 - Backend: Node.js, Express.js
 - Database: MongoDB with Mongoose
 - Authentication: JWT-based
