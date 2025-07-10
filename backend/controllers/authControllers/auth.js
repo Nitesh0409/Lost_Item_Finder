@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require("../../models/user");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -43,7 +43,7 @@ exports.signup = async (req, res, next) => {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
-        next(err);   
+        next(err);
     }
 }
 
@@ -60,7 +60,7 @@ exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        // 1. Find user
+        // Find user
         const user = await User.findOne({ email });
         if (!user) {
             const error = new Error("User not found with this email");
@@ -68,7 +68,7 @@ exports.login = async (req, res, next) => {
             return next(error);
         }
 
-        // 2. Compare passwords
+        // Compare passwords
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             const error = new Error("Invalid password");
@@ -76,14 +76,14 @@ exports.login = async (req, res, next) => {
             return next(error);
         }
 
-        // 3. Generate JWT
+        // Generate JWT
         const token = jwt.sign(
             { userId: user._id, email: user.email },
             process.env.JWT_SECRET || "fallback_secret_key",
-            { expiresIn: process.env.JWT_EXPIRES_IN}
+            { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
-        // 4. Send response
+        // Send response
         res.status(200).json({
             message: "Login successful",
             token,

@@ -12,7 +12,6 @@ const port = process.env.PORT || 5000;
 const lostItemRoutes = require("./routes/lostItemRoutes");
 const foundItemRoutes = require("./routes/foundItemRoutes");
 const authRoutes = require("./routes/authRoutes");
-const homeRoutes = require("./routes/home");
 const claimRoutes = require("./routes/claimRoutes");
 const mapRoutes = require("./routes/mapRoutes");
 
@@ -50,8 +49,6 @@ app.use("/api/user", authRoutes);
 app.use("/api/claim", claimRoutes);
 
 app.use("/api/map", mapRoutes);
-
-app.use("/", homeRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

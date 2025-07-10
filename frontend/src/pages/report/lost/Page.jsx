@@ -40,19 +40,7 @@ const predefinedLocations = [
 export default function ReportLostPage() {
   const navigate = useNavigate();
   const [imageFile, setImageFile] = useState(null);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-   
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-    } else {
-      setIsLoggedIn(true);
-    }
-  }, [navigate]);
   
-
   const toast = useToaster();
 
   const [formData, setFormData] = useState({

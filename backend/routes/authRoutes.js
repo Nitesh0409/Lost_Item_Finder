@@ -1,13 +1,13 @@
 const express = require("express");
 const { body } = require("express-validator");
 
-const userController = require("../controllers/authControllers");
+const userController = require("../controllers/authControllers/auth");
 const { userValidation } = require("../validators/userValidation");
 const authenticateUser = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.post("/signup", userValidation, userController.signup );
+router.post("/signup", userValidation, userController.signup);
 
 router.post(
     '/login',
@@ -16,11 +16,10 @@ router.post(
         body('password').trim().notEmpty().withMessage('Password is required'),
     ],
     userController.login
-);  
+);
 
 router.get("/getUser/:id", userController.getUser);
 
-router.get("/profile",authenticateUser,userController.getProfile);
+router.get("/profile", authenticateUser, userController.getProfile);
 
 module.exports = router;
-  

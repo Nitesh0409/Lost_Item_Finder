@@ -3,8 +3,6 @@ const User = require("../../models/user");
 
 const { validationResult } = require("express-validator");
 
-//will add later if item is found match and claimed then remove..
-
 exports.addLostItem = async (req, res,next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -19,7 +17,6 @@ exports.addLostItem = async (req, res,next) => {
     category,
     location,
     coordinates,
-    image,
     tags,
     dateLost,
     contactInfo,
@@ -29,8 +26,6 @@ exports.addLostItem = async (req, res,next) => {
 
   const parsedTags = typeof tags === "string" ? JSON.parse(tags) : tags;
   const parsedCoordinates = typeof coordinates === "string" ? JSON.parse(coordinates) : coordinates;
-
-  // console.log(req.file);
 
   // Handle uploaded image
   const imageInfo = req.file
@@ -59,7 +54,6 @@ exports.addLostItem = async (req, res,next) => {
 
   try {
     const savedItem = await lostItem.save();
-    // console.log(savedItem);
 
     await User.findByIdAndUpdate(userId, {
       $push: { itemsReportedLost: savedItem._id }
@@ -175,7 +169,7 @@ exports.updateLostItem = async (req, res, next) => {
     item.tags = tags || item.tags;
     item.image = image || item.image;
     item.location = location || item.location;
-    item.coordinates = coordinates || item.coordinates;
+    // item.coordinates = coordinates || item.coordinates;
 
 
     const updatedItem = await item.save();

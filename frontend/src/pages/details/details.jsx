@@ -92,8 +92,6 @@ export default function DetailsPage() {
 
   if (!item) return <div className="lf-loading">Loading...</div>;
 
-  // if (!finder) return <div className="lf-loading">Loading user...</div>;
-
   const isOwner = item.userId === currUser;
 
   const imageUrl = item.image?.path
@@ -250,7 +248,11 @@ export default function DetailsPage() {
                   </div>
                   <div className="lf-meta-row">
                     <Icon name="navigation" className="lf-text-green" />
-                    <span>Coordinates: {item.coordinates || "N/A"}</span>
+                    <span>
+                      Coordinates:{" "}
+                      {item?.coordinates[0] + " , " + item?.coordinates[1] ||
+                        "N/A"}
+                    </span>
                   </div>
                   <div className="lf-map-placeholder">
                     <div className="lf-map-wrapper">

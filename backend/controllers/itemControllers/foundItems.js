@@ -29,8 +29,6 @@ exports.addFoundItem = async (req, res,next) => {
   const parsedTags = typeof tags === "string" ? JSON.parse(tags) : tags;
   const parsedCoordinates = typeof coordinates === "string" ? JSON.parse(coordinates) : coordinates;
 
-  // console.log(req.file);
-
   // Handle uploaded image
   const imageInfo = req.file
     ? {
@@ -50,7 +48,7 @@ exports.addFoundItem = async (req, res,next) => {
     location,
     coordinates : parsedCoordinates,
     tags: parsedTags,
-    image: imageInfo, // ← now storing file info, not URL
+    image: imageInfo, 
     dateFound,
     contactInfo,
     safeLocation,
@@ -181,13 +179,3 @@ exports.updateFoundItem = async (req, res, next) => {
     next(err);
   }
 };
-
-
-/*
-will add later
-*/
-// if (item.userId.toString() !== req.userId) {
-//   const error = new Error('Not authorized to delete this item.');
-//   error.statusCode = 403;
-//   throw error;
-// }
