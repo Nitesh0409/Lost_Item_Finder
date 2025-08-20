@@ -52,14 +52,3 @@ Make sure the frontend is configured to call the correct backend endpoints (CORS
 
 Coming soon (deployment in progress)
 
-## Author
-
-Nitesh 
-[LinkedIn](https://www.linkedin.com/in/nitesh-kkanojia-a839b9309)
-[GitHub](https://github.com/nitesh0409)
-
-## License
-
-This project is part of a personal full-stack learning journey and is intended for educational/demo purposes. Feel free to fork, star, or contribute if open-sourced in the future.
-
-
