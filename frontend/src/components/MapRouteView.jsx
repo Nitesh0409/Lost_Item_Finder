@@ -1,8 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
-
 import { useToaster } from "./ui/Toaster";
-
 import {
   MapContainer,
   TileLayer,
@@ -12,6 +10,21 @@ import {
   useMap,
 } from "react-leaflet";
 import axios from "axios";
+import L from "leaflet";
+
+// --- FIXED: Leaflet Icon Production Bug ---
+// This ensures markers are visible after deployment
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+let DefaultIcon = L.icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
+L.Marker.prototype.options.icon = DefaultIcon;
+// ------------------------------------------
 
 const knowledgeTree = [26.474, 73.113];
 
@@ -37,11 +50,24 @@ export default function MapRouteView({ destination }) {
 
     const fetchRoute = async () => {
       try {
-        const res = await axios.post("http://localhost:8080/api/map/view", {
-          start: [knowledgeTree[1], knowledgeTree[0]],
-          end: [destination[1], destination[0]],
-          profile: "foot-walking",
-        });
+        // FIXED: Use VITE_API_URL and add Authorization header
+        const token = localStorage.getItem("token");
+        const baseUrl =
+          import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+
+        const res = await axios.post(
+          `${baseUrl}/map/view`,
+          {
+            start: [knowledgeTree[1], knowledgeTree[0]],
+            end: [destination[1], destination[0]],
+            profile: "foot-walking",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const geometry = res.data.features[0].geometry.coordinates.map(
           ([lng, lat]) => [lat, lng]
@@ -53,12 +79,17 @@ export default function MapRouteView({ destination }) {
         setDuration((summary.duration / 60).toFixed(1));
       } catch (err) {
         console.error("Route error:", err);
-        toast("route error", "error");
+        // Added check to alert if it's an auth issue
+        if (err.response?.status === 401) {
+          toast("Please login to view route details", "error");
+        } else {
+          toast("Route calculation failed", "error");
+        }
       }
     };
 
     fetchRoute();
-  }, [destination]);
+  }, [destination, toast]);
 
   return (
     <div style={{ marginTop: "1rem" }}>
@@ -77,14 +108,13 @@ export default function MapRouteView({ destination }) {
       <MapContainer
         center={destination}
         zoom={17}
-        // scrollWheelZoom={false}
-        // doubleClickZoom={false}
         style={{
           height: "450px",
-            width: "100%", 
-            margin: "20px 10px",
+          width: "100%",
+          margin: "20px 0", // Adjusted margin slightly for centering
           borderRadius: "10px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", 
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          zIndex: 0, // Ensures map stays behind dropdowns/navbars
         }}
       >
         <TileLayer
@@ -92,12 +122,19 @@ export default function MapRouteView({ destination }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <Marker position={destination}>
-          <Popup>Found Item Location</Popup>
+          <Popup>Item Location</Popup>
         </Marker>
         <Marker position={knowledgeTree}>
-          <Popup>Knowledge Tree</Popup>
+          <Popup>Knowledge Tree (Starting Point)</Popup>
         </Marker>
-        {route && <Polyline positions={route} color="blue" />}
+        {route && (
+          <Polyline
+            positions={route}
+            color="#3b82f6"
+            weight={5}
+            opacity={0.7}
+          />
+        )}
         {route && <FitBounds route={route} />}
       </MapContainer>
     </div>

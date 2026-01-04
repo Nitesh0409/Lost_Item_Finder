@@ -16,9 +16,17 @@ const authenticateUser = async(req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
-        if (!err.statusCode) {
+        if (
+            err.name === "JsonWebTokenError" ||
+            err.name === "TokenExpiredError" ||
+            err.name === "NotBeforeError"
+        ) {
+            err.statusCode = 401;
+            err.message = "Token is invalid or expired";
+        } else if (!err.statusCode) {
             err.statusCode = 500;
         }
+
         next(err);
       }
 }

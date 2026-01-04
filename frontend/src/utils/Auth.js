@@ -1,11 +1,16 @@
+import { jwtDecode } from "jwt-decode";
 
 export const isLoggedIn = () => {
     const token = localStorage.getItem("token");
     if (!token) return false;
 
     try {
-        const decoded = JSON.parse(atob(token.split(".")[1]));
-        const isExpired = decoded.exp * 1000 < Date.now();
+        const decoded = jwtDecode(token);
+        if (!decoded.exp) {
+            localStorage.removeItem("token");
+            return false;
+        }
+        const isExpired = decoded.exp * 1000 - 30000 < Date.now();
 
         if (isExpired) {
             localStorage.removeItem("token");

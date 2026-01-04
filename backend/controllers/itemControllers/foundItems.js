@@ -167,7 +167,7 @@ exports.updateFoundItem = async (req, res, next) => {
     item.tags = tags || item.tags;
     item.image = image || item.image;
     item.location = location || item.location;
-    item.coordinates = coordinates || item.coordinates;
+    // item.coordinates = coordinates || item.coordinates;
 
     const updatedItem = await item.save();
     res.status(200).json({

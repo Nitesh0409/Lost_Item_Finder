@@ -1,20 +1,30 @@
-// src/components/PrivateRoute.jsx
-import React, { useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import { isLoggedIn } from "../utils/Auth";
-import { useToaster } from "./ui/Toaster";
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const PrivateRoute = ({ children }) => {
-  const toast = useToaster();
-  const loggedIn = isLoggedIn();
+  const { isLoggedIn, isLoading } = useAuth();
+  const location = useLocation();
 
-  useEffect(() => {
-    if (!loggedIn) {
-      toast("You are not logged in. Please log in first.", "warning");
-    }
-  }, [loggedIn, toast]);
+  if (isLoading) {
+    // Show spinner while checking auth
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
-  return loggedIn ? children : <Navigate to="/login" replace />;
+  if (!isLoggedIn) {
+    // Pass the attempted URL to login page for redirect after login
+    return <Navigate
+      to="/login"
+      replace
+      state={{ from: location.pathname }}
+    />;
+  }
+
+  return children;
 };
 
 export default PrivateRoute;

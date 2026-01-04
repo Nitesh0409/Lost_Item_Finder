@@ -1,54 +1,73 @@
 # Lost Item Finder
 
-Lost Item Finder is a full-stack web application that allows campus users to report and track lost or found items efficiently. Built with the MERN stack, it supports user authentication, item posting, claiming, and image uploads.
+Lost Item Finder is a full-stack web application that helps users report lost or found items and claim ownership in a secure way.  
+The project was built incrementally, focusing on real-world authentication, authorization, and backend logic.
+
+This project demonstrates my understanding of full-stack development using the **MERN stack**.
+
+---
+
+## Problem Statement
+
+In college campuses, items are frequently lost, but there is no structured platform to match people who lose items with those who find them.  
+This application provides a simple and secure solution for posting items and verifying ownership claims.
+
+---
 
 ## Tech Stack
 
-- Frontend: React (Vite), css
-- Backend: Node.js, Express.js
-- Database: MongoDB with Mongoose
-- Authentication: JWT-based
-- Image Uploads: Cloudinary
-- Other: REST APIs, MVC Architecture, Axios
+- **Frontend**: React (Vite), CSS  
+- **Backend**: Node.js, Express.js  
+- **Database**: MongoDB (Mongoose)  
+- **Authentication**: JWT-based authentication  
+- **File Uploads**: Multer  
+- **Image Hosting**: Cloudinary  
+- **Additional Features**: Leaflet integration for item location  
 
-## Project Structure
+---
 
+## Core Features
 
-## Features
+### User Functionality
 
-- Secure user authentication (login/signup)
-- Post lost or found items with image support
-- Claim an item and track claim status
-- View history of item claims
-- Filter/search items by category or tags
-- Modular RESTful backend using MVC architecture
+- **Authentication**: Signup and login with JWT-based security  
+- **Item Posting**: Create lost or found item posts with images and location  
+- **Item Browsing**: View items posted by others with filters and map view  
+- **Claim Management**: Submit proof of ownership to claim items, which owners can approve or reject  
 
-## Work in Progress
+### User Dashboard
 
-- Notification system for claim responses
-- Messaging/chat between users
-- Email alerts for unresolved items
-- Deployment (Planned via Netlify + Render)
+- Track personal activity: posts created, items claimed, recent actions  
+- Edit and manage user profile  
+- Monitor contribution statistics for lost and found items  
 
-## Getting Started
+### Security & Protection
 
-### Backend Setup
+- Protected routes accessible only to authenticated users  
+- Role-based access for owners to manage claims  
 
-cd backend
-npm install
-npm run dev
+---
 
 
-### Frontend Setup
+## What I Learned From This Project
 
-cd frontend
-npm install
-npm run dev
+- Designing REST APIs with proper authentication  
+- Implementing role-based access to protected resources  
+- Handling file uploads securely  
+- Structuring a growing backend codebase  
+- Integrating maps and geolocation to enhance user experience  
+- Managing user dashboards and activity tracking  
+- Managing feature creep and prioritizing core functionality  
 
+---
 
-Make sure the frontend is configured to call the correct backend endpoints (CORS and base URLs).
+## Project Status
 
-## Live Demo
+The core functionality is complete and stable.  
+Additional features like payments and notifications were intentionally left out to maintain clarity and stability.
 
-Coming soon (deployment in progress)
+---
 
+## Note
+
+This project was developed as a learning-focused full-stack application and reflects real-world development challenges such as scaling features and maintaining clean architecture.

@@ -1,18 +1,32 @@
 // src/Login.jsx
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect , useRef} from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import './auth.css';
+import { useAuth } from "../../contexts/AuthContext";
 
 import { useToaster } from "../../components/ui/Toaster";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const toast = useToaster();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const location = useLocation();
+  const hasShownToast = useRef(false);
+
+  useEffect(() => {
+    if (location.state?.from && !hasShownToast.current) {
+      toast("You must log in to access that page", "warning");
+      hasShownToast.current = true;
+    }
+  }, [location.state, toast]);
+
+  console.log(location);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,31 +59,17 @@ export default function LoginPage() {
       toast("Login successful!", "info");
 
       localStorage.setItem("token", data.token);
-
-      // Decode the JWT to get expiration time
-      const decodedToken = JSON.parse(atob(data.token.split(".")[1]));
-      const expirationTime = decodedToken.exp * 1000; // convert to ms
-
-      // Calculate time remaining until expiration
-      const currentTime = Date.now();
-      const timeUntilExpiry = expirationTime - currentTime;
-
-      if (timeUntilExpiry > 0) {
-        // Set timeout to remove token after it expires
-        setTimeout(() => {
-          localStorage.removeItem("token");
-          toast("Session expired. Please log in again.", "warning");
-          console.log("Token expired and removed from localStorage.");
-          navigate("/login");
-        }, timeUntilExpiry);
-      }
+      login();
 
       setFormData({
         email: "",
         password: "",
       });
 
-      navigate("/");
+      // navigate("/");
+      const from = location.state?.from || "/";
+      navigate(from, { replace: true });
+
     } catch (err) {
       console.error("Login error:", err);
       toast("Something went wrong during login.","error");

@@ -163,14 +163,21 @@ exports.getDetailsPendingVerification = async (req, res, next) => {
         const populatedItems = await Promise.all(
             matchedLostItems.map(async (item) => {
                 const claim = await Claim.findById(item.claimId)
-                    .populate("claimantId")
+                    .populate("claimantId");
+                
+                if (!claim) {
+                    console.warn(`Claim not found: ${item.claimId}`);
+                    return null;
+                }
+
                 return {
                     claimId: claim,
                 };
             })
         );
+        const filteredItems = populatedItems.filter(Boolean);
 
-        return res.status(200).json({ matchedDetails: populatedItems });
+        return res.status(200).json({ matchedDetails: filteredItems });
     } catch (err) {
         console.error("Error in getDetailsPendingVerification:", err);
         if (!err.statusCode) err.statusCode = 500;

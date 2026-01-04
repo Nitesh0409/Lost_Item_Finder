@@ -19,11 +19,12 @@ const dbConnect = require("./config/db");
 
 app.use(bodyParser.json());
 
+//## You are manually setting headers for CORS, but missing general security headers.
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); // ✅ specific origin
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); //## this need to dynamic (process.env)
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
-  res.setHeader("Access-Control-Allow-Credentials", "true"); // ✅ needed for auth
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
@@ -36,7 +37,7 @@ app.use((req, res, next) => {
 
 dbConnect();
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //## -> this is static 
 
 // app.use("/api/auth",ItemRoutes.);
 app.use("/api/items/lost", lostItemRoutes);
@@ -61,5 +62,5 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
+  console.log(` Server running on port ${port}`);
 });

@@ -31,7 +31,7 @@ exports.addLostItem = async (req, res,next) => {
   const imageInfo = req.file
     ? {
       filename: req.file.filename,
-      path: req.file.path,
+      path: req.file.path,  //## -> path url will different.
       mimetype: req.file.mimetype,
       size: req.file.size,
     }
